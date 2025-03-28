@@ -1,0 +1,45 @@
+/* style.css */
+body {
+    background-color: white;
+    font-family: Arial, sans-serif;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 40px;
+}
+
+.flex-row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between; /* Push logo to right */
+    align-items: center;            /* Vertically center both */
+    padding: 10px 30px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+}
+
+.dashboard-title {
+    font-size: 32px;
+    margin: 0;
+}
+
+.dashboard-logo {
+    height: 60px;     /* Adjust size here */
+    width: auto;
+}
+
+.footer {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    padding: 20px 0;
+    margin-top: 60px;
+    border-top: 1px solid #ddd;
+}
