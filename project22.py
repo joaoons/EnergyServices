@@ -301,5 +301,12 @@ except Exception as e:
     print("🔥 Error during app startup:")
     print(traceback.format_exc())
 
+if not hasattr(app, 'layout') or app.layout is None:
+    app.layout = html.Div([
+        html.H1('⚠️ App failed to load'),
+        html.P('Check Render logs for full traceback.')
+    ])
+
+
 
 
