@@ -1,14 +1,14 @@
 from dash import Dash, dcc, html, dash_table
+# Initialize Dash
+app = Dash(__name__)
+server=app.server
+
 from dash.dependencies import Input, Output
 import pandas as pd
 import numpy as np
 from sklearn import  metrics
 import joblib 
 import plotly.express as px
-
-# Initialize Dash
-app = Dash(__name__)
-server=app.server
 
 #Load CSV Data !change to your path
 df2 = pd.read_csv("IST_North_Tower_2019_raw.csv")  
