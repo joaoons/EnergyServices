@@ -31,3 +31,4 @@ urllib3==2.3.0
 Werkzeug==3.0.6
 xgboost==3.0.0
 zipp==3.21.0
+gunicorn
