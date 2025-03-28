@@ -69,6 +69,7 @@ y_pred_BT = BT_model.predict(X)
 
 # Initialize Dash
 app = Dash(__name__)
+server=app.server
 
 # Layout
 app.layout = html.Div(children=[
