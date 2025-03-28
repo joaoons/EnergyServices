@@ -37,10 +37,8 @@ try:
     # Load models
     XGB_model = joblib.load('XGB_model.sav')
     y_pred_XGB = XGB_model.predict(X)
-
     NN_model = joblib.load('NN_model.sav')
     y_pred_NN = NN_model.predict(X)
-
     BT_model = joblib.load('BT_model.sav')
     y_pred_BT = BT_model.predict(X)
 
@@ -141,171 +139,16 @@ try:
         html.Footer("João Santos | Energy Services | March 2025", className='footer')
     ])
 
-    @app.callback(Output('time-series-graph', 'figure'), Input('menu', 'value'))
-    def update_time_series(selected_years):
-        traces = []
-        for year in selected_years:
-            filtered_df = df[df['Year'] == year]
-            traces.append({
-                'x': filtered_df.index,
-                'y': filtered_df['Power_kW'],
-                'type': 'line',
-                'name': f'Power - {year}'
-            })
-        return {
-            'data': traces,
-            'layout': {
-                'title': 'Power Usage Over Time',
-                'xaxis': {'title': 'Date'},
-                'yaxis': {'title': 'P (kW)'},
-                'legend': {'title': 'Legend'}
-            }
-        }
-
-    @app.callback(Output('bar-chart', 'figure'), Input('menu', 'value'))
-    def update_bar_chart(_):
-        bar_data = df.groupby('Year')['Power_kW'].sum().loc[[2017, 2018, 2019]] / 1e6
-        return {
-            'data': [{
-                'x': [str(year) for year in bar_data.index],
-                'y': bar_data.values,
-                'type': 'bar',
-                'name': 'Yearly Total Power'
-            }],
-            'layout': {
-                'title': 'Total Yearly Electricity Consumption (GWh)',
-                'xaxis': {'title': 'Year', 'type': 'category'},
-                'yaxis': {'title': {'text': 'P (GW)'}},
-                'legend': {'title': 'Legend'}
-            }
-        }
-
-    @app.callback(
-        Output('sensor-plots', 'children'),
-        Input('menu', 'value'),
-        Input('weather-variable-selector', 'value'),
-        Input('weather-chart-type', 'value')
-    )
-    def update_sensor_plots(selected_years, selected_vars, chart_type):
-        filtered_df = df[df['Year'].isin(selected_years)]
-        children = []
-        for i in range(0, len(selected_vars), 2):
-            row = []
-            for col in selected_vars[i:i+2]:
-                if chart_type == 'line':
-                    data = [{
-                        'x': filtered_df.index,
-                        'y': filtered_df[col],
-                        'type': 'line',
-                        'name': sensor_titles.get(col, col)
-                    }]
-                    layout = {
-                        'title': {'text': sensor_titles.get(col, col)},
-                        'xaxis': {'title': 'Date'},
-                        'yaxis': {'title': {'text': sensor_units.get(col, '')}},
-                        'margin': {'l': 40, 'r': 10, 't': 30, 'b': 40}
-                    }
-                elif chart_type == 'box':
-                    data = [{
-                        'y': filtered_df[col],
-                        'type': 'box',
-                        'name': sensor_titles.get(col, col)
-                    }]
-                    layout = {
-                        'title': {'text': f"{sensor_titles.get(col, col)}"},
-                        'yaxis': {'title': {'text': sensor_units.get(col, '')}},
-                        'margin': {'l': 40, 'r': 10, 't': 30, 'b': 40}
-                    }
-                elif chart_type == 'histogram':
-                    data = [{
-                        'x': filtered_df[col],
-                        'type': 'histogram',
-                        'name': sensor_titles.get(col, col)
-                    }]
-                    layout = {
-                        'title': {'text': f"{sensor_titles.get(col, col)}"},
-                        'xaxis': {'title': {'text': sensor_units.get(col, '')}},
-                        'yaxis': {'title': 'Count'},
-                        'margin': {'l': 40, 'r': 10, 't': 30, 'b': 40}
-                    }
-                else:
-                    data = []
-                    layout = {}
-                fig = {'data': data, 'layout': layout}
-                row.append(html.Div([
-                    dcc.Graph(figure=fig, style={'height': '300px'})
-                ], style={'width': '48%', 'margin': '1%'}))
-            children.append(html.Div(row, style={'display': 'flex', 'justifyContent': 'space-between', 'flexWrap': 'wrap'}))
-        return children
-
-    @app.callback(
-        Output('forecast-graph', 'figure'),
-        Output('forecast-info', 'children'),
-        Input('model-selector', 'value'),
-        Input('metric-selector', 'value')
-    )
-    def update_forecast(selected_models, selected_metrics):
-        dates = dft.index
-        model_preds = {
-            'XGBoost': y_pred_XGB,
-            'Neural Networks': y_pred_NN,
-            'Boostrapping': y_pred_BT
-        }
-        df_plot = pd.DataFrame({
-            'Date': dates,
-            'Power (kW)': Y,
-            'Type': 'Real'
-        })
-        for model in selected_models:
-            df_plot = pd.concat([df_plot, pd.DataFrame({
-                'Date': dates,
-                'Power (kW)': model_preds[model],
-                'Type': model
-            })])
-        fig = px.line(df_plot, x='Date', y='Power (kW)', color='Type',
-                      title='Forecasted vs Real Power Consumption')
-        fig.update_layout(
-            xaxis_title='Date',
-            yaxis_title='Power (kW)',
-            margin={'l': 60, 'r': 20, 't': 40, 'b': 40},
-            legend_title='Model'
-        )
-        def get_metrics(name, y_pred):
-            values = {
-                'Model': name,
-                'MAE': f'{metrics.mean_absolute_error(Y, y_pred):.2f}',
-                'MBE': f'{np.mean(Y - y_pred):.2f}',
-                'MSE': f'{metrics.mean_squared_error(Y, y_pred):.2f}',
-                'RMSE': f'{np.sqrt(metrics.mean_squared_error(Y, y_pred)):.2f}',
-                'cvRMSE': f'{(np.sqrt(metrics.mean_squared_error(Y, y_pred)) / np.mean(Y)):.2%}',
-                'NMBE': f'{(np.mean(Y - y_pred) / np.mean(Y)):.2%}'
-            }
-            return values
-        metrics_data = [get_metrics(name, pred) for name, pred in model_preds.items() if name in selected_models]
-        table_columns = ['Model'] + selected_metrics
-        metrics_table = dash_table.DataTable(
-            columns=[{'name': col, 'id': col} for col in table_columns],
-            data=[{col: row[col] for col in table_columns} for row in metrics_data],
-            style_cell={
-                'textAlign': 'center', 'padding': '4px', 'fontSize': '14px',
-                'minWidth': '80px', 'maxWidth': '120px', 'width': '100px'
-            },
-            style_header={
-                'fontWeight': 'bold', 'backgroundColor': '#f9f9f9'
-            },
-            style_table={'overflowX': 'auto', 'width': '60%', 'margin': 'auto'}
-        )
-        return fig, metrics_table
-
 except Exception as e:
-    print("🔥 Error during app startup:")
+    print("\U0001F525 Error during app startup:")
     print(traceback.format_exc())
 
-if not hasattr(app, 'layout') or app.layout is None:
+    # Fallback layout to prevent crash on Render
     app.layout = html.Div([
-        html.H1('⚠️ App failed to load'),
-        html.P('Check Render logs for full traceback.')
+        html.H1("⚠️ App failed to load"),
+        html.P("Check the Render logs for details.")
     ])
+
 
 
 
