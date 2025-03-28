@@ -7,9 +7,9 @@ import joblib
 import plotly.express as px
 
 #Load CSV Data !change to your path
-df2 = pd.read_csv("/Users/joaosantos/Documents/MEFT/P3/SE/Project1/MyProject1/IST_North_Tower_2019_raw.csv")  
-df1 = pd.read_csv("/Users/joaosantos/Documents/MEFT/P3/SE/Project1/MyProject1/IST_North_Tower_Clean.csv")  
-dft = pd.read_csv("/Users/joaosantos/Documents/MEFT/P3/SE/Project1/MyProject1/IST_North_Tower_test.csv")  
+df2 = pd.read_csv("IST_North_Tower_2019_raw.csv")  
+df1 = pd.read_csv("IST_North_Tower_Clean.csv")  
+dft = pd.read_csv("IST_North_Tower_test.csv")  
 
 # Prepare Data
 df2.rename(columns={'North Tower (kWh)': 'Power_kW'}, inplace=True)
@@ -55,13 +55,13 @@ sensor_units = {
 }
 
 #Load models !change to your path
-XGB_model = joblib.load('/Users/joaosantos/Documents/MEFT/P3/SE/Project2/MyProject2/XGB_model.sav')
+XGB_model = joblib.load('XGB_model.sav')
 y_pred_XGB = XGB_model.predict(X)
 
-NN_model = joblib.load('/Users/joaosantos/Documents/MEFT/P3/SE/Project2/MyProject2/NN_model.sav')
+NN_model = joblib.load('NN_model.sav')
 y_pred_NN = NN_model.predict(X)
 
-BT_model = joblib.load('/Users/joaosantos/Documents/MEFT/P3/SE/Project2/MyProject2/BT_model.sav')
+BT_model = joblib.load('BT_model.sav')
 y_pred_BT = BT_model.predict(X)
 
 #RF_model = joblib.load('/Users/joaosantos/Documents/MEFT/P3/SE/Project2/MyProject2/RF_model.sav')
