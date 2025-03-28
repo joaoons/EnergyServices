@@ -6,6 +6,10 @@ from sklearn import  metrics
 import joblib 
 import plotly.express as px
 
+# Initialize Dash
+app = Dash(__name__)
+server=app.server
+
 #Load CSV Data !change to your path
 df2 = pd.read_csv("IST_North_Tower_2019_raw.csv")  
 df1 = pd.read_csv("IST_North_Tower_Clean.csv")  
@@ -66,10 +70,6 @@ y_pred_BT = BT_model.predict(X)
 
 #RF_model = joblib.load('/Users/joaosantos/Documents/MEFT/P3/SE/Project2/MyProject2/RF_model.sav')
 #y_pred_RF = RF_model.predict(X)
-
-# Initialize Dash
-app = Dash(__name__)
-server=app.server
 
 # Layout
 app.layout = html.Div(children=[
