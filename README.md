@@ -1,6 +1,6 @@
 # EnergyServices
 
-This repository contains two projects developed for the **Energy Services** course in my MSc in Engineering Physics. Both projects focus on **forecasting electricity consumption** in the buildings of IST using Python and data analysis techniques.
+This repository contains two projects developed for the **Energy Services** course in my MSc in Engineering Physics.
 
 ## Repository Structure
 
