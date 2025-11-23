@@ -10,7 +10,7 @@ from sklearn import  metrics
 import joblib 
 import plotly.express as px
 
-#Load CSV Data !change to your path
+#Load CSV Data 
 df2 = pd.read_csv("IST_North_Tower_2019_raw.csv")  
 df1 = pd.read_csv("IST_North_Tower_Clean.csv")  
 dft = pd.read_csv("IST_North_Tower_test.csv")  
@@ -58,7 +58,7 @@ sensor_units = {
     'rain_day' : 'Rain'
 }
 
-#Load models !change to your path
+#Load models 
 XGB_model = joblib.load('XGB_model.sav')
 y_pred_XGB = XGB_model.predict(X)
 
