@@ -2,7 +2,7 @@
 
 This folder contains all files related to the **interactive dashboard** for forecasting electricity consumption in IST North Tower.
 
-## Folder Structure
+## Files Overview
 
 - `assets/` – Contains CSS styles
 - `dashboard.py` – Main Python script
