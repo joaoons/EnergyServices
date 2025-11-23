@@ -7,8 +7,6 @@ This repository contains two projects developed for the **Energy Services** cour
 - `Project1_ForecastingModel/` – Development of a regression model to predict electricity consumption.
 - `Project2_Dashboard/` – Testing the regression model with 2019 data and building a dashboard for visualization and interaction.
 
-Each folder contains code, data (where possible), and documentation related to the respective project.
-
 ---
 
 ## Project 1 – Forecasting Model
